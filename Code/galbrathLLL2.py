@@ -2,7 +2,11 @@ from utils.utilFunctions import *
 
 
 def size_reduction(k, Bm,B_gs,Mym):
+    # print("HE")
+    # print(np.round(Mym,4))
     for j in reversed(range(0,k)):
+        # print(k,j)
+        # print(np.round(Mym,4))
         qj = np.round(Mym[k,j])
         Bm[k,:] = Bm[k,:] - qj*Bm[j,:]
         # print(Bm)
@@ -24,7 +28,7 @@ def Galbraith_LLL_removing_linear_dependence(Bm,delta = 3/4, norm_cutoff = 0.001
     B_gs, Mym = gram_schmidt(Bm)
     # print("B_gs:")
     # print(np.round(B_gs))
-    # print(Mym)
+    # print(np.round(Mym,4))
     B_gs_norm = calc_norm(B_gs)
     k = 1
     while k < n:
@@ -38,6 +42,11 @@ def Galbraith_LLL_removing_linear_dependence(Bm,delta = 3/4, norm_cutoff = 0.001
             Bm, B_gs, Mym, B_gs_norm = remove_dependency(k,Bm)
             n -= 1
             k = 1
+            # print("Removed a vector")
+            # print(Bm)
+            # print(B_gs)
+            # print(Mym)
+            # print()
         elif B_gs_norm[k] >= (delta - Mym[k,k-1]**2)*B_gs_norm[k-1]:
             k = k + 1
         else:
@@ -70,15 +79,23 @@ if __name__ == "__main__":
     #                [43, 51, 6, 1],
     #                [46, 431, 6, 14],
     #                [43, 51, 6, 1]])
-    Bm = np.array([
-    [ -7,  0, -1,-17,-38, 11, 27],
-    [  2, -9,-20, 25, 24, 35, -5],
-    [ 11, 51, 13,-24, 27,  7, 15],
-    [ 29,  5, -3, 33,-37,-36, -5],
-    [ 53,  0,-24, -5, 10, 19,-29],
-    [  8,-39,-63,  4, 18,-21, 13],
-    [ 47,-22, 52,-12, 43, 22, 10],
-    [ -8, 39, 63, -4,-18, 21,-13]])
+    # Bm = np.array([
+    # [ -7,  0, -1,-17,-38, 11, 27],
+    # [  2, -9,-20, 25, 24, 35, -5],
+    # [ 11, 51, 13,-24, 27,  7, 15],
+    # [ 29,  5, -3, 33,-37,-36, -5],
+    # [ 53,  0,-24, -5, 10, 19,-29],
+    # [  8,-39,-63,  4, 18,-21, 13],
+    # [ 47,-22, 52,-12, 43, 22, 10],
+    # [ -8, 39, 63, -4,-18, 21,-13]])
+    Bm = np.array([[ -5, 31, -7,-14, 26,-26, -9, -2],
+ [ 21,  7, -9, 35, -5,-21,-21, -2],
+ [  2, -8,-20,  8,-13, 24,-44,-28],
+ [ 16, 19,-32,-15,-28, 35, 33,-12],
+ [ 38,-13, 39, -4, 18, 27,  0,-12],
+ [ -6, 24, -9, 18, -1,-22, 40,-43],
+ [-17,-11, 33,-21,-42,-31,-25,-35],
+ [-38, 13,-39,  4,-18,-27,  0, 12]])
     print("B:")
     print(Bm)
     # print(gram_schmidt(Bm)[0])

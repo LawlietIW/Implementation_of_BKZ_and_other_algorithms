@@ -22,14 +22,12 @@ def gram_schmidt(Bm):
     """
     Computes my own QR thing. 
 
-    Removes all 0 rows. Seems to work well
-
     Gives so Mym@B_gs is Bm.
     ------------------------------------
     Mym: (r,r)
     B_gs: (r,k)
     """
-    Bm = Bm[~np.all(Bm == 0, axis=1)]  #Removing all zero rows
+    # Bm = Bm[~np.all(Bm == 0, axis=1)]  #Removing all zero rows
     r,k = Bm.shape
     B_gs = np.zeros((r,k))
     Mym = np.zeros((r,r))
