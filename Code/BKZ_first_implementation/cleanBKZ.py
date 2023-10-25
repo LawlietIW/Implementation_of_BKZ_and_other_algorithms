@@ -1,6 +1,6 @@
 from utils.utilFunctions import *
-from galbrathLLL2 import Galbraith_LLL_removing_linear_dependence
-from myOldEnumeration import enum_short_vector
+from galbraithLLL import Galbraith_LLL_removing_linear_dependence
+from enumeration import enum_short_vector
 
 def pi_projection(x,b):
     """
@@ -96,14 +96,17 @@ if __name__ == "__main__":
 #  [34,36,70, 9,84]])
     print("Bm")
     print(np.array2string(Bm,separator=','))
-    BKZBm = BKZ(Bm, 3/4, beta = 3)
+    BKZBm = BKZ(Bm, 0.9, beta = 3)
     print()
     print("BKZBm")
     print(np.array2string(BKZBm,separator=','))
 
+    print()
+    print()
+    print("Norms:")
     B_gs, Mym = gram_schmidt(BKZBm)
     for i in range(8):
-        print(np.linalg.norm(PI(BKZBm[i], B_gs[i:7,:])))
+        print(np.linalg.norm(PI(BKZBm[i], B_gs[i:8,:])))
 
 
 
