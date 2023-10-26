@@ -80,7 +80,7 @@ def BKZ(Bm, delta, beta):
 
 
 if __name__ == "__main__":
-    Bm = np.random.randint(100, size=(8, 8)) 
+    Bm = np.random.randint(100, size=(10, 10)) 
 #     Bm = np.array([[44,58,38,36,84,97,76],
 #  [31,16,45,35,33,55,66],
 #  [19, 4,96,72,26,58,11],
@@ -96,7 +96,7 @@ if __name__ == "__main__":
 #  [34,36,70, 9,84]])
     print("Bm")
     print(np.array2string(Bm,separator=','))
-    BKZBm = BKZ(Bm, 0.9, beta = 3)
+    BKZBm = BKZ(Bm, 0.8, beta = 3)
     print()
     print("BKZBm")
     print(np.array2string(BKZBm,separator=','))
