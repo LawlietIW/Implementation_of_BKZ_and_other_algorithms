@@ -1,5 +1,7 @@
 from utils.utilFunctions import *
 import numpy as np
+import time
+
 
 def calc_M1(i,a,A_squared,n,Mym,B_gs_norm):
     """
@@ -76,12 +78,13 @@ def enum_short_vector(Bm,A_squared):
 
 
 if __name__ == "__main__":
-    Bm = np.random.randint(100, size=(7,10))
-    Bm = np.array([[1,0,3],[5,1,17],[6,2,20]])
-    print(Bm)
+    Bm = np.random.randint(500, size=(20,20))
+    # Bm = np.array([[1,0,3],[5,1,17],[6,2,20]])
+    print(np.array2string(Bm, separator=', '))
 
     A_squared = np.inner(Bm[0],Bm[0])  #So this is Asquared
+    start = time.time()
     a, shortestVect = enum_short_vector(Bm,A_squared) 
-    
+    print("Time taken:", time.time() - start)
 
-    print("Shortest Vector:", shortestVect, "\na: ", a)
+    # print("Shortest Vector:", shortestVect, "\na: ", a)
