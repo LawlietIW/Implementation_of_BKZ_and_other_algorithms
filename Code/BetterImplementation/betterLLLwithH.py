@@ -1,17 +1,29 @@
 import numpy as np
 
 
-def sub_RED(k,l, Bm, Mym):
+def sub_RED(k,l, Bm, Hm, Mym):
     if abs(Mym[k,l]) <= 0.5:
-        return Bm, Mym   #Probably not needed
+        return Bm, Hm, Mym   #Probably not needed
     
     q = round(Mym[k,l])   #round to nearest integer
     Bm[k] = Bm[k] - q*Bm[l]
+    Hm[k] = Hm[k] - q*Hm[l]
     Mym[k,l] = Mym[k,l] - q
     for i in range(l):
         Mym[k,i] = Mym[k,i] - q*Mym[l,i]
-    return Bm,  Mym 
+    return Bm, Hm, Mym
 
+
+def insert(k,i, Bm, Hm):
+    """Insert Bi into basis"""
+    b = Bm[k]
+    V = Hm[k]
+    for j in reversed(range(i+1,k+1)):
+        Bm[j] = Bm[j-1]
+        Hm[j] = Hm[j-1]
+    Bm[i] = b
+    Hm[i] = V
+    return Bm, Hm
 
 def step2(k, Bm, B_gs, Mym, B_norms):
     """Incremental Gram-Schmidt"""
@@ -25,50 +37,27 @@ def step2(k, Bm, B_gs, Mym, B_norms):
         return "Error. Bi didn't form basis"
     return Bm, B_gs, Mym, B_norms
 
-
-def insert(k,i, Bm):
-    """Insert Bi into basis"""
-    b_ = np.copy(Bm[k])
-    # print("b:", b_)
-    for j in reversed(range(i+1,k+1)):
-        Bm[j] = Bm[j-1]
-    # print(i)
-    Bm[i] = b_
-    # print("Bm after insert:")
-    # print(Bm)
-    return Bm
-
 def step4(k, i, Bm, B_norms, Mym, B):
     """Deep LLL test"""
-    # print("(i,k):", (i,k))
     if i == k:
         k += 1
-        return k, i, Bm, B
+        return k, i, B
 
-    # print("B_norms:", B_norms)
-    # print("B:", B)
     if 3/4*B_norms[i] <= B:
-        # print("We don't want to insert")
         B = B - Mym[k,i]**2*B_norms[i]
         i += 1
-        k, i, Bm, B = step4(k, i, Bm, B_norms, Mym, B)
-        return k, i, Bm, B
+        step4(k, i, Bm, B_norms, Mym, B)
 
     else:
-        # print("We want to insert")
-        Bm = insert(k,i, Bm)
+        Bm, Hm = insert(k,i, Bm, Hm)
         if i >= 1:
-            """Don't know yet what this part does"""
             k = i - 1
             B = np.linalg.norm(Bm[k])**2
-            i = 0
-            k, i, Bm, B = step4(k, i, Bm, B_norms, Mym, B)
-            return k, i, Bm, B
-        elif i == 0:
-            k = 0
-            return k, i, Bm, B
-    # print("schould never get here")
-    return "Error"
+            i = 1
+            step4(k, i, Bm, B_norms, Mym, B)
+    if i == 0:
+        k = 1
+    return k, i, B
 
 
 
@@ -80,48 +69,32 @@ def main_LLL(Bm, delta = 3/4):
     k = 0
     B_gs = np.zeros((r,c))
     Mym = np.zeros((r,r))
-    # print("B_gs:")
-    # print(B_gs)
+    print(B_gs)
     B_norms = np.zeros(r)
+    Hm = np.identity(r)
 
     while k < r:
-        # print("k:", k)
-        # print("Bm:")
-        # print(Bm)
-        # print("B_gs:")
-        # print(B_gs)
-
         Bm, B_gs, Mym, B_norms = step2(k, Bm, B_gs, Mym, B_norms)
-        # print("B_gs after:")
-        # print(B_gs)
         if k == 0:
             k = 1
             continue   #Go to step 5
 
         """Initialize test"""
-        # print("Mym before: ")
-        # print(Mym)
-        for l in reversed(range(0,k)):
-            Bm,  Mym = sub_RED(k,l, Bm, Mym)
-        # print("Bm after:")
-        # print(Bm)
+        for l in reversed(range(0,k-1)):
+            sub_RED(k,l)
         B = np.linalg.norm(Bm[k])**2
         i = 0
+
         """Deep LLL test"""
-        k, i, Bm, B= step4(k, i, Bm, B_norms, Mym, B)
-    return Bm
+        k, i, B = step4(k, i, Bm, B_norms, Mym, B)
+    return Bm, Hm
             
 
-if __name__ == "__main__":
-    """
-    It doesn't work perfectly yet, but I moved on as I need linear dependency removal
-    """
-    Bm = np.random.randint(100, size=(10, 10))
-    print("Bm: ")
-    print(np.array2string(Bm, separator=', '))
-    LLL = main_LLL(Bm)
-    print("LLL:")
-    print(LLL)
+# 
+
+Bm = np.array([[1,2,3],[4,5,6],[7,8,9]])
+main_LLL(Bm)
+
 
 
 
