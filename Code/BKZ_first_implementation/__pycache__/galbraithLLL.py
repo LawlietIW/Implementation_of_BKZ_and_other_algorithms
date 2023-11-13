@@ -1,4 +1,9 @@
-from utils.utilFunctions import *
+if __name__ == "__main__":
+    from utils.utilFunctions import *
+else:
+    from BKZ_first_implementation.utils.utilFunctions import *
+import time
+
 import time as time
 
 def size_reduction(k, Bm,B_gs,Mym):

@@ -1,6 +1,9 @@
-from utils.utilFunctions import *
-import numpy as np
+if __name__ == "__main__":
+    from utils.utilFunctions import *
+else:
+    from BKZ_first_implementation.utils.utilFunctions import *
 import time
+# import numpy as np
 
 
 def calc_M1(i,a,A_squared,n,Mym,B_gs_norm):
@@ -62,14 +65,13 @@ def loop_until_not_zero_vector(r,a,A_squared,Bm,Mym,B_gs_norm):
     return best_a
 
 
-def enum_short_vector(Bm,A_squared):
+def enum_short_vector(Bm,Mym, B_gs_norm):
     """
     Currently only working for r <= k.
     """
     r = Bm.shape[0]   #Number of rows
-    B_gs,Mym = gram_schmidt(Bm)
-    B_gs_norm = [np.inner(B_gs[i,:],B_gs[i,:]) for i in range(r)]
     a = np.zeros(r)
+    A_squared = np.inner(Bm[0],Bm[0])  #So this is Asquared
 
     best_a = loop_until_not_zero_vector(r,a,A_squared,Bm,Mym,B_gs_norm)
 
@@ -78,13 +80,15 @@ def enum_short_vector(Bm,A_squared):
 
 
 if __name__ == "__main__":
-    Bm = np.random.randint(500, size=(20,20))
-    # Bm = np.array([[1,0,3],[5,1,17],[6,2,20]])
+    # Bm = np.random.randint(500, size=(20,30))
+    Bm = np.array([[1,0,3,53],[5,1,17,12],[6,2,20,32]])
     print(np.array2string(Bm, separator=', '))
+    r = Bm.shape[0]
+    B_gs,Mym = gram_schmidt(Bm)
+    B_gs_norm = [np.inner(B_gs[i,:],B_gs[i,:]) for i in range(r)]
 
-    A_squared = np.inner(Bm[0],Bm[0])  #So this is Asquared
     start = time.time()
-    a, shortestVect = enum_short_vector(Bm,A_squared) 
+    a, shortestVect = enum_short_vector(Bm,Mym, B_gs_norm) 
     print("Time taken:", time.time() - start)
 
-    # print("Shortest Vector:", shortestVect, "\na: ", a)
+    print("Shortest Vector:", shortestVect, "\na: ", a)

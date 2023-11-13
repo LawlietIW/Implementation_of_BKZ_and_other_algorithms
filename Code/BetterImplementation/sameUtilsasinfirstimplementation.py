@@ -66,12 +66,10 @@ if __name__ == "__main__":
     # print(a)
     # print(b)
     Bm = np.array(
-        [[  9,  -8,   8,  -4],
-        [  0,  0,  0,   9],
-        [  0,  0,  0,   3],
-        [  0,  0,  0,   9],
-        [  2,  15,  12,   9],
-        [  2,  15,  12,   9]])
+        [[  9,  -8,   8,  -4,32],
+        [  43,  32,  5,   9,4],
+        [  21,  54,  12,   3,11],
+        [  41,  13,  36,   21,25]])
     print("B:")
     print(Bm)
     Bstar,Mym = gram_schmidt(Bm)
@@ -81,8 +79,17 @@ if __name__ == "__main__":
     print()
     print("Mym:")
     print(Mym)
-    print("Back")
-    print(Mym@Bstar)
+    # print("Back")
+    # print(Mym@Bstar)
+
+    Bm = Bm[1:4]
+    Bstar,Mym = gram_schmidt(Bm)
+    print()
+    print("B*:")
+    print(Bstar)
+    print()
+    print("Mym:")
+    print(Mym)
 
 
 
