@@ -1,5 +1,5 @@
 import numpy as np
-from betterUtils import *
+from BetterImplementation.sameUtilsasinfirstimplementation import *
 
 
 def find_lattice_vectors(Bm, B_gs, Mym, B_norms, R_squared):
