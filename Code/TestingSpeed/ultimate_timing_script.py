@@ -3,6 +3,7 @@ import os
 import time 
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 
 # Get the absolute path of ParentFolder
 parent_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))  # Navigate one level up from A
@@ -26,55 +27,80 @@ def make_Bm_from_n_list(n_list, max_number):
         Bm = np.random.randint(max_number, size=(n,n))
         list_of_Bm.append(Bm)
     return list_of_Bm
+
  
-
-# list_of_Bm = [
-# np.array([[33,89,18,17,30],
-#  [ 3,42,93,48,26],
-#  [17, 4,67,63,74],
-#  [55,36,77,92,17],
-#  [34,36,70, 9,84]]),
-#  np.array([[33,89,18,17,30],
-#  [ 3,42,93,48,26],
-#  [17, 4,67,63,74],
-#  [55,36,77,92,17],
-#  [34,36,70, 9,84]])]
-
-def measure_time(Bm, delta, beta):
-    start_time = time.time()
-    result = ultimate_BKZ(Bm, Naive_LLL, Naive_ENUM, delta = delta, beta = beta)
-    end_time = time.time()
-    execution_time = end_time - start_time
-    return result, execution_time
-
-
 def format_seconds(seconds):
     minutes = seconds // 60
     remaining_seconds = seconds % 60
     return f"{minutes} minutes, {int(remaining_seconds)} seconds"
 
 
+def what_to_test(check):
+    if check == "NN":
+        """NN = NaiveLLLNaiveENUM"""
+        latex_path = 'TestingSpeed/NL_NE/NaiveLLLNaiveENUM_latex.csv'
+        readable_path = 'TestingSpeed/NL_NE/NaiveLLLNaiveENUM_readable.csv'
+        LLL = Naive_LLL
+        ENUM = Naive_ENUM
+    if check == "NI":
+        """NI = NaiveLLLImprovedENUM"""
+        latex_path = 'TestingSpeed/NL_IE/NaiveLLLImprovedENUM_latex.csv'
+        readable_path = 'TestingSpeed/NL_IE/NaiveLLLImprovedENUM_readable.csv'
+        LLL = Naive_LLL
+        ENUM = Improved_ENUM
+    if check == "IN":
+        """IN = ImprovedLLLNaiveENUM"""
+        latex_path = 'TestingSpeed/IL_NE/ImprovedLLLNaiveENUM_latex.csv'
+        readable_path = 'TestingSpeed/IL_NE/ImprovedLLLNaiveENUM_readable.csv'
+        LLL = Improved_LLL
+        ENUM = Naive_ENUM
+    if check == "II":
+        """II = ImprovedLLLImprovedENUM"""
+        latex_path = 'TestingSpeed/IL_IE/ImprovedLLLImprovedENUM_latex.csv'
+        readable_path = 'TestingSpeed/IL_IE/ImprovedLLLImprovedENUM_readable.csv'
+        LLL = Improved_LLL
+        ENUM = Improved_ENUM
+    return LLL,ENUM, latex_path, readable_path
 
+
+
+def measure_time(Bm, delta, beta, LLL, ENUM):
+    start_time = time.time()
+    result = ultimate_BKZ(Bm, LLL, ENUM, delta = delta, beta = beta)
+    end_time = time.time()
+    execution_time = end_time - start_time
+    return result, execution_time
+
+
+############################################
+############### VARIABLES ##################
+############################################
+
+WHAT_TO_TEST = "NN"  #NN, NI, IN, II
+
+n_list = np.arange(4,10,2)  #What n do we want to look at
+MAX_NUMBER = 500
+delta = 0.8
+beta = 3
+
+HARD_N = 20  #When do we want to print to file every step, cause every step takes so much time
+
+
+
+list_of_Bm = make_Bm_from_n_list(n_list, MAX_NUMBER) 
 
 ############################################
 ############# LETS START TIMING ############
 ############################################
 
-
-n_list = [20,30,40,50,60]
-MAX_NUMBER = 500
-delta = 0.8
-beta = 3
-
-list_of_Bm = make_Bm_from_n_list(n_list, MAX_NUMBER) 
-
+LLL,ENUM, latex_path, readable_path = what_to_test(WHAT_TO_TEST)
 
 timing_results = []
 
 
-for Bm in list_of_Bm:
-    print("Working on next")
-    result, exec_time = measure_time(Bm, delta, beta)
+for Bm in tqdm(list_of_Bm):
+    # print("Working on next")
+    result, exec_time = measure_time(Bm, delta, beta,  LLL, ENUM)
     current_n = Bm.shape[0]
 
     timing_results.append({
@@ -86,11 +112,11 @@ for Bm in list_of_Bm:
         'Readable Time': format_seconds(exec_time)
     })
 
-    if current_n > 80:
+    if current_n > HARD_N:
         ### I just want the data to be saved even though it starts taking a long time
         df = pd.DataFrame(timing_results)
-        df.to_csv('TestingSpeed/NL_NE/NaiveLLLNaiveENUM_latex.csv', sep='&', index=False)
-        df.to_csv('TestingSpeed/NL_NE/NaiveLLLNaiveENUM_readable.csv', sep=',', index=False)
+        df.to_csv(latex_path, sep='&', index=False)
+        df.to_csv(readable_path, sep=',', index=False)
 
 
 # Create a DataFrame from the results
@@ -99,8 +125,8 @@ df = pd.DataFrame(timing_results)
 
 print(df)
 # Write the DataFrame to an Excel file
-df.to_csv('TestingSpeed/NL_NE/NaiveLLLNaiveENUM_latex.csv', sep='&', index=False)
-df.to_csv('TestingSpeed/NL_NE/NaiveLLLNaiveENUM_readable.csv', sep=',', index=False)
+df.to_csv(latex_path, sep='&', index=False)
+df.to_csv(readable_path, sep=',', index=False)
 
 
 

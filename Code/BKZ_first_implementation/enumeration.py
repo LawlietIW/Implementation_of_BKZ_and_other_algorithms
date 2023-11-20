@@ -56,6 +56,8 @@ def loop_until_not_zero_vector(r,a,A_squared,Bm,Mym,B_gs_norm):
     """
     The function that keeps updating A_squared until we find the shortest one not 0
     """
+    best_a = np.zeros(r)
+    best_a[0] = 1
     while True:
         A_squared, newa = recursionpart(r-1,a,A_squared,Bm, Mym, B_gs_norm) 
         if A_squared == -1: #If only the zero vector was shorter, we have our best_a
@@ -76,11 +78,21 @@ def enum_short_vector(Bm,Mym, B_gs_norm):
     best_a = loop_until_not_zero_vector(r,a,A_squared,Bm,Mym,B_gs_norm)
 
     shortest_vector = sum([best_a[l]*Bm[l,:] for l in range(r)])
-    return best_a, shortest_vector
+
+    #Calculate c_bar
+    c_bar = np.linalg.norm(shortest_vector)**2
+    # for s in range(r):
+    #     inner_sum = 0
+    #     for i in range(s,r):
+    #         inner_sum += best_a[i] * Mym[i,s]
+    #     c_bar += inner_sum**2 * np.linalg.norm(B_gs_norm[s])**2
+
+    return best_a, shortest_vector, c_bar
 
 
 if __name__ == "__main__":
     # Bm = np.random.randint(500, size=(20,30))
+    # Bm = np.array([[1,0,3,53],[5,1,17,12],[6,2,20,32]])
     Bm = np.array([[1,0,3,53],[5,1,17,12],[6,2,20,32]])
     print(np.array2string(Bm, separator=', '))
     r = Bm.shape[0]
@@ -88,7 +100,9 @@ if __name__ == "__main__":
     B_gs_norm = [np.inner(B_gs[i,:],B_gs[i,:]) for i in range(r)]
 
     start = time.time()
-    a, shortestVect = enum_short_vector(Bm,Mym, B_gs_norm) 
+    a, shortestVect, c_bar = enum_short_vector(Bm,Mym, B_gs_norm) 
     print("Time taken:", time.time() - start)
 
     print("Shortest Vector:", shortestVect, "\na: ", a)
+
+    print("c_bar:", c_bar)

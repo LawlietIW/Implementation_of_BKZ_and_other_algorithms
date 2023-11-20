@@ -129,7 +129,8 @@ if __name__ == "__main__":
 #     Bm = np.array([[-82, -42, -178, -211, 52, 22, -32, 78, -9, -51, -63, 279, 200, 280],
 # [145, 0, -84, 53, 211, -203, 195, -35, 15, 92, 38, -56, 172, -150],
 # [120, 76, 66, 249, 152, -220, -65, 124, 53, 161, -120, 209, -131, -39]])
-    Bm = np.array([[1,0,3,53],[5,1,17,12],[6,2,20,32]])
+    # Bm = np.array([[1,0,3,53],[5,1,17,12],[6,2,20,32]])
+    Bm = np.random.randint(376, size=(11,11))
     print(Bm)
     B_gs,Mym = gram_schmidt(Bm)
     B_norms = calc_norm(B_gs)
@@ -137,4 +138,6 @@ if __name__ == "__main__":
     u, shortest_vector, c_bar = Schnorr_ENUM(Bm ,Mym, B_norms)
     print("Time taken: ", time.time() - start)
 
+    
     print("Schnorr shortest vector: ", shortest_vector, "\na:", u, "\ncbar:", c_bar)
+    print("maybe something", np.linalg.norm(shortest_vector)**2)
