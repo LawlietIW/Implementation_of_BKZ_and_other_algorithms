@@ -32,7 +32,7 @@ def make_Bm_from_n_list(n_list, max_number):
 def format_seconds(seconds):
     minutes = seconds // 60
     remaining_seconds = seconds % 60
-    return f"{minutes} minutes, {int(remaining_seconds)} seconds"
+    return f"{int(minutes)} minutes, {int(remaining_seconds)} seconds"
 
 
 def what_to_test(check):
@@ -76,14 +76,15 @@ def measure_time(Bm, delta, beta, LLL, ENUM):
 ############### VARIABLES ##################
 ############################################
 
-WHAT_TO_TEST = "NN"  #NN, NI, IN, II
+WHAT_TO_TEST = "IN"  #NN, NI, IN, II
 
-n_list = np.arange(4,10,2)  #What n do we want to look at
+# n_list = np.arange(6,30,2)  #What n do we want to look at
+n_list = [30,40,50,60,70,80]
 MAX_NUMBER = 500
 delta = 0.8
 beta = 3
 
-HARD_N = 20  #When do we want to print to file every step, cause every step takes so much time
+HARD_N = 50  #When do we want to print to file every step, cause every step takes so much time
 
 
 
