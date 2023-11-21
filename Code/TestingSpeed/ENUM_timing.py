@@ -38,29 +38,42 @@ def which_BKZ_to_use(check):
     #Ugly but I want the same structure as in the other file
     if check == "NN":
         """NN = NaiveENUM"""
-        latex_path = 'TestingSpeed/NL_NE/ENUM_times_latex.csv'
-        readable_path = 'TestingSpeed/NL_NE/ENUM_times_readable.csv'
-        BKZ_path = 'TestingSpeed/NL_NE/BKZ_of_test_matrices.json'
-    if check == "NI":
+        latex_path = 'TestingSpeed/Timing/NL_NE/ENUM_times_latex.csv'
+        readable_path = 'TestingSpeed/Timing/NL_NE/ENUM_times_readable.csv'
+        BKZ_path = 'TestingSpeed/Timing/NL_NE/BKZ_of_test_matrices.json'
+    elif check == "NI":
         """NI = NaiveLLLImprovedENUM"""
-        latex_path = 'TestingSpeed/NL_IE/ENUM_times_latex.csv'
-        readable_path = 'TestingSpeed/NL_IE/ENUM_times_readable.csv'
-        BKZ_path = 'TestingSpeed/NL_IE/BKZ_of_test_matrices.json'
-    if check == "IN":
+        latex_path = 'TestingSpeed/Timing/NL_IE/ENUM_times_latex.csv'
+        readable_path = 'TestingSpeed/Timing/NL_IE/ENUM_times_readable.csv'
+        BKZ_path = 'TestingSpeed/Timing/NL_IE/BKZ_of_test_matrices.json'
+    elif check == "IN":
         """IN = ImprovedLLLNaiveENUM"""
         latex_path = 'TestingSpeed/IL_NE/ENUM_times_latex.csv'
         readable_path = 'TestingSpeed/IL_NE/ENUM_times_readable.csv'
         BKZ_path = 'TestingSpeed/IL_NE/BKZ_of_test_matrices.json'
-    if check == "II":
+    elif check == "II":
         """II = ImprovedLLLImprovedENUM"""
-        latex_path = 'TestingSpeed/IL_IE/ENUM_times_latex.csv'
-        readable_path = 'TestingSpeed/IL_IE/ENUM_times_readable.csv'
-        BKZ_path = 'TestingSpeed/IL_IE/BKZ_of_test_matrices.json'
-    if check == "Sage":
+        latex_path = 'TestingSpeed/Timing/IL_IE/ENUM_times_latex.csv'
+        readable_path = 'TestingSpeed/Timing/IL_IE/ENUM_times_readable.csv'
+        BKZ_path = 'TestingSpeed/Timing/IL_IE/BKZ_of_test_matrices.json'
+    elif check == "Sage":
         """Sage = SAGEMATH_BKZ"""
-        latex_path = 'TestingSpeed/Sage/ENUM_times_latex.csv'
-        readable_path = 'TestingSpeed/Sage/ENUM_times_readable.csv'
-        BKZ_path = 'TestingSpeed/Sage/BKZ_of_test_matrices.json'
+        latex_path = 'TestingSpeed/Timing/Sage/ENUM_times_latex.csv'
+        readable_path = 'TestingSpeed/Timing/Sage/ENUM_times_readable.csv'
+        BKZ_path = 'TestingSpeed/Timing/Sage/BKZ_of_test_matrices.json'
+    elif check == "Test_naive":
+        """Test = we just test on the test_file. """
+        latex_path = 'TestingSpeed/Timing/Test_times/naive_ENUM_times_latex.csv'
+        readable_path = 'TestingSpeed/Timing/Test_times/naive_ENUM_times_readable.csv'
+        BKZ_path = 'TestingSpeed/test_files/test_matrices_for_naive_LLL.json'
+    elif check == "Test_improved":
+        """Test = we just test on the test_file.    """
+        latex_path = 'TestingSpeed/Timing/Test_times/improved_ENUM_times_latex.csv'
+        readable_path = 'TestingSpeed/Timing/Test_times/improved_ENUM_times_readable.csv'
+        BKZ_path = 'TestingSpeed/test_files/test_matrices_for_improved_LLL.json'
+    else:
+        print("You have to choose between NN, NI, IN, II, Sage, Test_naive, Test_improved")
+        assert(False)
     return latex_path, readable_path, BKZ_path
 
 
@@ -85,19 +98,50 @@ def read_matrices_from_json(file_name):
         matrices = json.load(json_file)
         return matrices
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ############################################
 ############### VARIABLES ##################
 ############################################
 
-WHAT_TO_TEST = "II"  #NN, NI, IN, II'
+WHAT_TO_TEST = "NI"  #NN, NI, IN, II', 'Sage', 'Test_naive', 'Test_improved'
+
 ENUM = Improved_ENUM
 
 
-latex_path, readable_path, BKZ_path = which_BKZ_to_use(WHAT_TO_TEST)
-list_of_BKZ = read_matrices_from_json(BKZ_path)
+
+
+
+
+
+
+
+
+
+
+
+
+
 ############################################
 ############# LETS START TIMING ############
 ############################################
+
+latex_path, readable_path, BKZ_path = which_BKZ_to_use(WHAT_TO_TEST)
+list_of_BKZ = read_matrices_from_json(BKZ_path)
 
 timing_results = []
 
@@ -132,4 +176,22 @@ print(df)
 # Write the DataFrame to an Excel file
 df.to_csv(latex_path, sep='&', index=False)
 df.to_csv(readable_path, sep=',', index=False)
-# write_matrices_to_json(BKZ_path, list_of_BKZ)
+
+dict_to_view_methods = {
+    "NN": ["Naive", "Naive"],
+    "NI": ["Naive", "Improved"],
+    "IN": ["Improved", "Naive"],
+    "II": ["Improved", "Improved"],
+    "Sage": ["Sage", "Sage"],
+    "Test_naive": ["test_file_naive", "x"],
+    "Test_improved": ["test_file_improved", "x"],
+}
+
+LLLname = dict_to_view_methods[WHAT_TO_TEST][0]
+ENUMname = dict_to_view_methods[WHAT_TO_TEST][1]
+
+print("----------------------------------------")
+print()
+print("We have tested enumeration on the following:")
+print("LLL: ", LLLname)
+print("ENUM: ", ENUMname)

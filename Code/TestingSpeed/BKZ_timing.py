@@ -34,33 +34,37 @@ def format_seconds(seconds):
 def what_to_test(check):
     if check == "NN":
         """NN = NaiveLLLNaiveENUM"""
-        latex_path = 'TestingSpeed/NL_NE/NaiveLLLNaiveENUM_latex.csv'
-        readable_path = 'TestingSpeed/NL_NE/NaiveLLLNaiveENUM_readable.csv'
-        BKZ_path = 'TestingSpeed/NL_NE/BKZ_of_test_matrices.json'
+        latex_path = 'TestingSpeed/Timing/NL_NE/NaiveLLLNaiveENUM_latex.csv'
+        readable_path = 'TestingSpeed/Timing/NL_NE/NaiveLLLNaiveENUM_readable.csv'
+        BKZ_path = 'TestingSpeed/Timing/NL_NE/BKZ_of_test_matrices.json'
+        test_path = 'TestingSpeed/test_files/test_matrices_for_naive_LLL.json'
         LLL = Naive_LLL
         ENUM = Naive_ENUM
     if check == "NI":
         """NI = NaiveLLLImprovedENUM"""
-        latex_path = 'TestingSpeed/NL_IE/NaiveLLLImprovedENUM_latex.csv'
-        readable_path = 'TestingSpeed/NL_IE/NaiveLLLImprovedENUM_readable.csv'
-        BKZ_path = 'TestingSpeed/NL_IE/BKZ_of_test_matrices.json'
+        latex_path = 'TestingSpeed/Timing/NL_IE/NaiveLLLImprovedENUM_latex.csv'
+        readable_path = 'TestingSpeed/Timing/NL_IE/NaiveLLLImprovedENUM_readable.csv'
+        BKZ_path = 'TestingSpeed/Timing/NL_IE/BKZ_of_test_matrices.json'
+        test_path = 'TestingSpeed/test_files/test_matrices_for_naive_LLL.json'
         LLL = Naive_LLL
         ENUM = Improved_ENUM
     if check == "IN":
         """IN = ImprovedLLLNaiveENUM"""
-        latex_path = 'TestingSpeed/IL_NE/ImprovedLLLNaiveENUM_latex.csv'
-        readable_path = 'TestingSpeed/IL_NE/ImprovedLLLNaiveENUM_readable.csv'
-        BKZ_path = 'TestingSpeed/IL_NE/BKZ_of_test_matrices.json'
+        latex_path = 'TestingSpeed/Timing/IL_NE/ImprovedLLLNaiveENUM_latex.csv'
+        readable_path = 'TestingSpeed/Timing/IL_NE/ImprovedLLLNaiveENUM_readable.csv'
+        BKZ_path = 'TestingSpeed/Timing/IL_NE/BKZ_of_test_matrices.json'
+        test_path = 'TestingSpeed/test_files/test_matrices_for_improved_LLL.json'
         LLL = Improved_LLL
         ENUM = Naive_ENUM
     if check == "II":
         """II = ImprovedLLLImprovedENUM"""
-        latex_path = 'TestingSpeed/IL_IE/ImprovedLLLImprovedENUM_latex.csv'
-        readable_path = 'TestingSpeed/IL_IE/ImprovedLLLImprovedENUM_readable.csv' 
-        BKZ_path = 'TestingSpeed/IL_IE/BKZ_of_test_matrices.json'
+        latex_path = 'TestingSpeed/Timing/IL_IE/ImprovedLLLImprovedENUM_latex.csv'
+        readable_path = 'TestingSpeed/Timing/IL_IE/ImprovedLLLImprovedENUM_readable.csv' 
+        BKZ_path = 'TestingSpeed/Timing/IL_IE/BKZ_of_test_matrices.json'
+        test_path = 'TestingSpeed/test_files/test_matrices_for_improved_LLL.json'
         LLL = Improved_LLL
         ENUM = Improved_ENUM
-    return LLL,ENUM, latex_path, readable_path, BKZ_path
+    return LLL,ENUM, latex_path, readable_path, BKZ_path, test_path
 
 
 
@@ -82,11 +86,19 @@ def read_matrices_from_json(file_name):
         matrices = json.load(json_file)
         return matrices
 
+
+
+
+
+
+
+
+
 ############################################
 ############### VARIABLES ##################
 ############################################
 
-WHAT_TO_TEST = "IN"  #NN, NI, IN, II
+WHAT_TO_TEST = "II"  #NN, NI, IN, II
 
 delta = 0.8
 beta = 3
@@ -95,13 +107,31 @@ HARD_N = 50  #When do we want to print to file every step, cause every step take
 
 
 
-list_of_Bm = read_matrices_from_json("TestingSpeed/test_matrices.json") 
-list_of_BKZ = []
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ############################################
 ############# LETS START TIMING ############
 ############################################
 
-LLL,ENUM, latex_path, readable_path, BKZ_path = what_to_test(WHAT_TO_TEST)
+LLL,ENUM, latex_path, readable_path, BKZ_path, test_path = what_to_test(WHAT_TO_TEST)
+
+
+list_of_Bm = read_matrices_from_json(test_path) 
+list_of_BKZ = []
 
 timing_results = []
 
@@ -141,6 +171,24 @@ df.to_csv(readable_path, sep=',', index=False)
 write_matrices_to_json(BKZ_path, list_of_BKZ)
 
 
+
+dict_to_view_methods = {
+    "NN": ["Naive", "Naive"],
+    "NI": ["Naive", "Improved"],
+    "IN": ["Improved", "Naive"],
+    "II": ["Improved", "Improved"],
+}
+
+LLLname = dict_to_view_methods[WHAT_TO_TEST][0]
+ENUMname = dict_to_view_methods[WHAT_TO_TEST][1]
+
+print("----------------------------------------")
+print()
+print("We have tested the following:")
+print("LLL: ", LLLname)
+print("ENUM: ", ENUMname)
+print("on")
+print(test_path)
 
 
 
