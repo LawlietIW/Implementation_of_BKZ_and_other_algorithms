@@ -120,14 +120,7 @@ def read_matrices_from_json(file_name):
 
 WHAT_TO_TEST = "NI"  #NN, NI, IN, II', 'Sage', 'Test_naive', 'Test_improved'
 
-ENUM = Improved_ENUM
-
-
-
-
-
-
-
+ENUM = Naive_ENUM
 
 
 
@@ -139,6 +132,9 @@ ENUM = Improved_ENUM
 ############################################
 ############# LETS START TIMING ############
 ############################################
+
+
+
 
 latex_path, readable_path, BKZ_path = which_BKZ_to_use(WHAT_TO_TEST)
 list_of_BKZ = read_matrices_from_json(BKZ_path)
@@ -169,14 +165,23 @@ for BKZm in tqdm(list_of_BKZ):
 
 
 # Create a DataFrame from the results
-print("Print to csv")
 df = pd.DataFrame(timing_results)
-
-print(df)
 # Write the DataFrame to an Excel file
 df.to_csv(latex_path, sep='&', index=False)
 df.to_csv(readable_path, sep=',', index=False)
 
+
+
+
+
+############################################
+############# LETS PRINT RESULTS ###########
+############################################
+
+
+
+
+print(df)
 dict_to_view_methods = {
     "NN": ["Naive", "Naive"],
     "NI": ["Naive", "Improved"],
@@ -190,8 +195,16 @@ dict_to_view_methods = {
 LLLname = dict_to_view_methods[WHAT_TO_TEST][0]
 ENUMname = dict_to_view_methods[WHAT_TO_TEST][1]
 
+if ENUM.__name__ == "enum_short_vector":
+    EnumerationMethodForTiming = "Naive"
+elif ENUM.__name__ == "Schnorr_ENUM":
+    EnumerationMethodForTiming = "Improved"
+
 print("----------------------------------------")
 print()
 print("We have tested enumeration on the following:")
-print("LLL: ", LLLname)
-print("ENUM: ", ENUMname)
+print("BKZ_LLL: ", LLLname)
+print("BKZ_ENUM: ", ENUMname)
+print()
+print("By using enumeration:")
+print(EnumerationMethodForTiming)
