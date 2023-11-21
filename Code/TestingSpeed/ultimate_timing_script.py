@@ -60,7 +60,7 @@ def what_to_test(check):
         BKZ_path = 'TestingSpeed/IL_IE/BKZ_of_test_matrices.json'
         LLL = Improved_LLL
         ENUM = Improved_ENUM
-    return LLL,ENUM, latex_path, readable_path
+    return LLL,ENUM, latex_path, readable_path, BKZ_path
 
 
 
@@ -86,7 +86,7 @@ def read_matrices_from_json(file_name):
 ############### VARIABLES ##################
 ############################################
 
-WHAT_TO_TEST = "II"  #NN, NI, IN, II
+WHAT_TO_TEST = "IN"  #NN, NI, IN, II
 
 delta = 0.8
 beta = 3
@@ -101,7 +101,7 @@ list_of_BKZ = []
 ############# LETS START TIMING ############
 ############################################
 
-LLL,ENUM, latex_path, readable_path = what_to_test(WHAT_TO_TEST)
+LLL,ENUM, latex_path, readable_path, BKZ_path = what_to_test(WHAT_TO_TEST)
 
 timing_results = []
 

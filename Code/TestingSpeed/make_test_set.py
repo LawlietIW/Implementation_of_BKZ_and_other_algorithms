@@ -21,7 +21,7 @@ def read_matrices_from_json(file_name):
     
 
 if __name__ == "__main__":
-    n_list = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    n_list = [5, 10, 15, 20,25,30,35,50]
     max_number = 500
     list_of_Bm = make_Bm_from_n_list(n_list, max_number)
     write_matrices_to_json('TestingSpeed/test_matrices.json', list_of_Bm)
