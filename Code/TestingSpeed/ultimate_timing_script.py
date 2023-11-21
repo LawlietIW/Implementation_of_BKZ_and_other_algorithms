@@ -4,6 +4,7 @@ import time
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
+import json
 
 # Get the absolute path of ParentFolder
 parent_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))  # Navigate one level up from A
@@ -21,12 +22,7 @@ from BetterImplementation.schnorr_enumeration import Schnorr_ENUM as Improved_EN
 ############################################
 
 
-def make_Bm_from_n_list(n_list, max_number):
-    list_of_Bm = []
-    for n in n_list:
-        Bm = np.random.randint(max_number, size=(n,n))
-        list_of_Bm.append(Bm)
-    return list_of_Bm
+
 
  
 def format_seconds(seconds):
@@ -40,24 +36,28 @@ def what_to_test(check):
         """NN = NaiveLLLNaiveENUM"""
         latex_path = 'TestingSpeed/NL_NE/NaiveLLLNaiveENUM_latex.csv'
         readable_path = 'TestingSpeed/NL_NE/NaiveLLLNaiveENUM_readable.csv'
+        BKZ_path = 'TestingSpeed/NL_NE/BKZ_of_test_matrices.json'
         LLL = Naive_LLL
         ENUM = Naive_ENUM
     if check == "NI":
         """NI = NaiveLLLImprovedENUM"""
         latex_path = 'TestingSpeed/NL_IE/NaiveLLLImprovedENUM_latex.csv'
         readable_path = 'TestingSpeed/NL_IE/NaiveLLLImprovedENUM_readable.csv'
+        BKZ_path = 'TestingSpeed/NL_IE/BKZ_of_test_matrices.json'
         LLL = Naive_LLL
         ENUM = Improved_ENUM
     if check == "IN":
         """IN = ImprovedLLLNaiveENUM"""
         latex_path = 'TestingSpeed/IL_NE/ImprovedLLLNaiveENUM_latex.csv'
         readable_path = 'TestingSpeed/IL_NE/ImprovedLLLNaiveENUM_readable.csv'
+        BKZ_path = 'TestingSpeed/IL_NE/BKZ_of_test_matrices.json'
         LLL = Improved_LLL
         ENUM = Naive_ENUM
     if check == "II":
         """II = ImprovedLLLImprovedENUM"""
         latex_path = 'TestingSpeed/IL_IE/ImprovedLLLImprovedENUM_latex.csv'
-        readable_path = 'TestingSpeed/IL_IE/ImprovedLLLImprovedENUM_readable.csv'
+        readable_path = 'TestingSpeed/IL_IE/ImprovedLLLImprovedENUM_readable.csv' 
+        BKZ_path = 'TestingSpeed/IL_IE/BKZ_of_test_matrices.json'
         LLL = Improved_LLL
         ENUM = Improved_ENUM
     return LLL,ENUM, latex_path, readable_path
@@ -71,16 +71,23 @@ def measure_time(Bm, delta, beta, LLL, ENUM):
     execution_time = end_time - start_time
     return result, execution_time
 
+# Function to save a list of matrices to a JSON file
+def write_matrices_to_json(file_name, matrices):
+    with open(file_name, 'w') as json_file:
+        json.dump(matrices, json_file)
+
+# Function to read the list of matrices from a JSON file
+def read_matrices_from_json(file_name):
+    with open(file_name, 'r') as json_file:
+        matrices = json.load(json_file)
+        return matrices
 
 ############################################
 ############### VARIABLES ##################
 ############################################
 
-WHAT_TO_TEST = "IN"  #NN, NI, IN, II
+WHAT_TO_TEST = "II"  #NN, NI, IN, II
 
-# n_list = np.arange(6,30,2)  #What n do we want to look at
-n_list = [30,40,50,60,70,80]
-MAX_NUMBER = 500
 delta = 0.8
 beta = 3
 
@@ -88,8 +95,8 @@ HARD_N = 50  #When do we want to print to file every step, cause every step take
 
 
 
-list_of_Bm = make_Bm_from_n_list(n_list, MAX_NUMBER) 
-
+list_of_Bm = read_matrices_from_json("TestingSpeed/test_matrices.json") 
+list_of_BKZ = []
 ############################################
 ############# LETS START TIMING ############
 ############################################
@@ -100,15 +107,18 @@ timing_results = []
 
 
 for Bm in tqdm(list_of_Bm):
+    Bm = np.array(Bm)   #make it back into array
+    max_number = np.amax(Bm)
     # print("Working on next")
     result, exec_time = measure_time(Bm, delta, beta,  LLL, ENUM)
+    list_of_BKZ.append(result.tolist())  #got to be a list to save in json
     current_n = Bm.shape[0]
 
     timing_results.append({
         'n': current_n,
         'Delta': delta,
         'Beta': beta,
-        'Max number' : MAX_NUMBER,
+        'Max number' : max_number,
         'Time (s)': f"{exec_time:.6f}",
         'Readable Time': format_seconds(exec_time)
     })
@@ -128,6 +138,7 @@ print(df)
 # Write the DataFrame to an Excel file
 df.to_csv(latex_path, sep='&', index=False)
 df.to_csv(readable_path, sep=',', index=False)
+write_matrices_to_json(BKZ_path, list_of_BKZ)
 
 
 
