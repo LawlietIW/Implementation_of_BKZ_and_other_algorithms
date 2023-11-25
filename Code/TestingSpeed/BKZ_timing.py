@@ -100,8 +100,8 @@ def read_matrices_from_json(file_name):
 
 WHAT_TO_TEST = "II"  #NN, NI, IN, II
 
-delta = 0.8
-beta = 3
+delta = 0.75
+beta = 7
 
 HARD_N = 50  #When do we want to print to file every step, cause every step takes so much time
 

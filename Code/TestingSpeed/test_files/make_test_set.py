@@ -21,12 +21,12 @@ def read_matrices_from_json(file_name):
     
 
 if __name__ == "__main__":
-    n_list = [30,35,40,45,50]
+    n_list = [30,40,50,60,70,80,90,100,110,120]
     max_number = 500
     list_of_Bm = make_Bm_from_n_list(n_list, max_number)
     write_matrices_to_json('TestingSpeed/test_files/test_matrices_for_improved_LLL.json', list_of_Bm)
 
-    n_list = np.arange(5,26 , 2)
+    n_list = np.arange(8,40 , 4)
     max_number = 500
     list_of_Bm = make_Bm_from_n_list(n_list, max_number)
     write_matrices_to_json('TestingSpeed/test_files/test_matrices_for_naive_LLL.json', list_of_Bm)

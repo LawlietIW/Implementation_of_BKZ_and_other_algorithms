@@ -118,13 +118,12 @@ def read_matrices_from_json(file_name):
 ############### VARIABLES ##################
 ############################################
 
-WHAT_TO_TEST = "NI"  #NN, NI, IN, II', 'Sage', 'Test_naive', 'Test_improved'
+WHAT_TO_TEST = "Sage"  #NN, NI, IN, II', 'Sage', 'Test_naive', 'Test_improved'
 
-ENUM = Naive_ENUM
-
-
+ENUM = Improved_ENUM
 
 
+HARD_N = 50
 
 
 
@@ -157,11 +156,11 @@ for BKZm in tqdm(list_of_BKZ):
         # 'Shortest_vector': b_
     })
 
-    # if current_n > HARD_N:
-    #     ### I just want the data to be saved even though it starts taking a long time
-    #     df = pd.DataFrame(timing_results)
-    #     df.to_csv(latex_path, sep='&', index=False)
-    #     df.to_csv(readable_path, sep=',', index=False)
+    if current_n >= HARD_N:
+        ### I just want the data to be saved even though it starts taking a long time
+        df = pd.DataFrame(timing_results)
+        df.to_csv(latex_path, sep='&', index=False)
+        df.to_csv(readable_path, sep=',', index=False)
 
 
 # Create a DataFrame from the results
