@@ -1,6 +1,7 @@
 import sys
 import os
-import time 
+import time
+import datetime
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -98,12 +99,12 @@ def read_matrices_from_json(file_name):
 ############### VARIABLES ##################
 ############################################
 
-WHAT_TO_TEST = "II"  #NN, NI, IN, II
+WHAT_TO_TEST = "IN"  #NN, NI, IN, II
 
 delta = 0.75
 beta = 7
 
-HARD_N = 50  #When do we want to print to file every step, cause every step takes so much time
+HARD_N = 30  #When do we want to print to file every step, cause every step takes so much time
 
 
 
@@ -158,6 +159,8 @@ for Bm in tqdm(list_of_Bm):
         df = pd.DataFrame(timing_results)
         df.to_csv(latex_path, sep='&', index=False)
         df.to_csv(readable_path, sep=',', index=False)
+        now = datetime.datetime.now()
+        print("\nWrote matrix of dimension ", current_n, " to file at ",now.time())
 
 
 # Create a DataFrame from the results

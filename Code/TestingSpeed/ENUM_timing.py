@@ -118,7 +118,7 @@ def read_matrices_from_json(file_name):
 ############### VARIABLES ##################
 ############################################
 
-WHAT_TO_TEST = "Sage"  #NN, NI, IN, II', 'Sage', 'Test_naive', 'Test_improved'
+WHAT_TO_TEST = "NI"  #NN, NI, IN, II', 'Sage', 'Test_naive', 'Test_improved'
 
 ENUM = Improved_ENUM
 

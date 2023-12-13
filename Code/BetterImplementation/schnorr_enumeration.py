@@ -26,7 +26,7 @@ def Schnorr_ENUM(Bm, Mym, B_norms):
     
     s = t = 0
 
-    
+    # print(c_bar[0])
     c_tilde = np.zeros(r+1)
 
     """
@@ -130,7 +130,9 @@ if __name__ == "__main__":
 # [145, 0, -84, 53, 211, -203, 195, -35, 15, 92, 38, -56, 172, -150],
 # [120, 76, 66, 249, 152, -220, -65, 124, 53, 161, -120, 209, -131, -39]])
     # Bm = np.array([[1,0,3,53],[5,1,17,12],[6,2,20,32]])
-    Bm = np.random.randint(376, size=(11,11))
+    # Bm = np.random.randint(376, size=(11,11))
+    Bm = np.array([[1,0,3,6],[5,1,7,12],[6,2,9,10]])
+    # print(np.array([1,0,3,6])@np.array([1,0,3,6]))
     print(Bm)
     B_gs,Mym = gram_schmidt(Bm)
     B_norms = calc_norm(B_gs)
