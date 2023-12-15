@@ -1,6 +1,7 @@
 import sys
 import os
-import time 
+import time
+import datetime
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -48,9 +49,9 @@ def which_BKZ_to_use(check):
         BKZ_path = 'TestingSpeed/Timing/NL_IE/BKZ_of_test_matrices.json'
     elif check == "IN":
         """IN = ImprovedLLLNaiveENUM"""
-        latex_path = 'TestingSpeed/IL_NE/ENUM_times_latex.csv'
-        readable_path = 'TestingSpeed/IL_NE/ENUM_times_readable.csv'
-        BKZ_path = 'TestingSpeed/IL_NE/BKZ_of_test_matrices.json'
+        latex_path = 'TestingSpeed/Timing/IL_NE/ENUM_times_latex.csv'
+        readable_path = 'TestingSpeed/Timing/IL_NE/ENUM_times_readable.csv'
+        BKZ_path = 'TestingSpeed/Timing/IL_NE/BKZ_of_test_matrices.json'
     elif check == "II":
         """II = ImprovedLLLImprovedENUM"""
         latex_path = 'TestingSpeed/Timing/IL_IE/ENUM_times_latex.csv'
@@ -118,12 +119,12 @@ def read_matrices_from_json(file_name):
 ############### VARIABLES ##################
 ############################################
 
-WHAT_TO_TEST = "NI"  #NN, NI, IN, II', 'Sage', 'Test_naive', 'Test_improved'
+WHAT_TO_TEST = "Test_improved"  #NN, NI, IN, II', 'Sage', 'Test_naive', 'Test_improved'
 
 ENUM = Improved_ENUM
 
 
-HARD_N = 50
+HARD_N = 30
 
 
 
@@ -143,10 +144,13 @@ timing_results = []
 
 for BKZm in tqdm(list_of_BKZ):
     BKZm = np.array(BKZm)   #make it back into array
+    current_n = BKZm.shape[0]
+    if current_n == 45:
+        continue
     # print("Working on next")
     b_,c_bar, exec_time = measure_time(BKZm, ENUM)
     # list_of_BKZ.append(result.tolist())  #got to be a list to save in json
-    current_n = BKZm.shape[0]
+    
 
     timing_results.append({
         'n': current_n,
@@ -161,6 +165,8 @@ for BKZm in tqdm(list_of_BKZ):
         df = pd.DataFrame(timing_results)
         df.to_csv(latex_path, sep='&', index=False)
         df.to_csv(readable_path, sep=',', index=False)
+        now = datetime.datetime.now()
+        print("\nWrote matrix of dimension ", current_n, " to file at ",now.time())
 
 
 # Create a DataFrame from the results

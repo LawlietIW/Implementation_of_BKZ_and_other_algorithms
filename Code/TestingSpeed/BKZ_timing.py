@@ -99,7 +99,7 @@ def read_matrices_from_json(file_name):
 ############### VARIABLES ##################
 ############################################
 
-WHAT_TO_TEST = "IN"  #NN, NI, IN, II
+WHAT_TO_TEST = "II"  #NN, NI, IN, II
 
 delta = 0.75
 beta = 7
